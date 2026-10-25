@@ -18,26 +18,18 @@
 
 ## 📌 Overview
 
-Offline SELinux configuration & policy posture auditor
+OSeLinux is an offline, read-only auditor for SELinux configuration and policy posture. It parses /etc/selinux/config, runtime snapshots, boolean dumps, fcontext listings and module inventories to assess enforcement mode, risky booleans and permissive domains. Findings are scored and mapped to CIS, STIG, CWE and MITRE ATT&CK.
 
 ---
 
 ## ✨ Features
 
-- /etc/selinux/config parser — SELINUX=, SELINUXTYPE=, SETLOCALDEFS, REQUIRESEUSERS, duplicate / typo keys
-- Runtime snapshot reader — /sys/fs/selinux/enforce, policyvers, deny_unknown, checkreqprot, mls, sestatus
-- Boolean dump parser — getsebool -a, semanage boolean -l, setsebool -P scripts, booleans(.local), CIL
-- Curated high-risk boolean catalogue (~45 booleans) + "expected-on" hardening booleans (secure_mode_*)
-- fcontext parser — semanage fcontext -l, file_contexts (+ .local / .homedirs); coverage of critical paths
-- Module inventory — semodule -l / --list-modules=full, store directory walk, custom .te / .cil source review (dontaudit removal, permissive, allow unconfined)
-- Permissive domain list (semanage permissive -l)
-- SELinux user / login mapping review (unconfined_u)
-- Process label hints from ps -eZ dumps (unconfined_t)
-- Kernel cmdline / GRUB review (selinux=0, enforcing=0)
-- CIS / DISA STIG / CWE / MITRE ATT&CK mapping
-- Score + A+…F grade, severity filter, --fail-on gate
-- Export TXT / Markdown / JSON / CSV / SARIF 2.1.0
-- Built-in self-test (--demo) on a synthetic tree
+- /etc/selinux/config parser and runtime snapshot reader (enforce, policyvers, sestatus)
+- Boolean dump parsing with a curated high-risk boolean catalogue
+- fcontext and file-context coverage analysis for critical paths
+- Module inventory review with custom .te/.cil source checks and permissive-domain listing
+- SELinux user/login mapping, process-label hints and kernel cmdline/GRUB review
+- CIS/STIG/CWE/MITRE mapping with scoring, A+ to F grade and a CI fail-on gate
 
 ---
 
@@ -51,7 +43,10 @@ Offline SELinux configuration & policy posture auditor
 ## 🚀 Usage
 
 ```bash
-./OSeLinux
+./OSeLinux --scan
+./OSeLinux --config /etc/selinux/config --booleans booleans.txt
+./OSeLinux --root /mnt/collected --fail-on high
+./OSeLinux --help
 ```
 
 ---
